@@ -38,14 +38,11 @@ GROUP BY a.id, b.id",
           .status(500)
           .send("Ocorreu um erro a ir buscar os restaurantes");
       }
-
-      // rows.forEach((values) => {
-      //   rows["items"] = JSON.parse(values.items);
-      // });
-
-      var aux = rows[0]["items"]
-
-      res.send(aux);
+      var final = rows;
+      final.forEach((values) => {
+        final["items"] = JSON.parse(values.items);
+      });
+      res.send(final);
     }
   );
 });
