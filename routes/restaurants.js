@@ -106,7 +106,7 @@ app.post("/order", async function (req, res) {
 
   Object.keys(menu_items).forEach((item) => {
     db.query(
-      `INSERT INTO orders(ordered_at, ordered_by, restaurant_id, progress, deadline)
+      `INSERT INTO orders(ordered_at, ordered_by, restaurant_id, progress, deadline, closed)
               VALUES("` +
         datetime +
         `", "` +
@@ -115,13 +115,16 @@ app.post("/order", async function (req, res) {
         item +
         `", 0, "` +
         req.body.deadline +
+        `", "` +
+        0 +
         `")`,
       (err2, result) => {
         if (err2) {
           return res.status(500).send("Erro a criar os pedidos");
         }
         const itemsids = menu_items[item];
-        Object.keys(itemsids).forEach((i) => {
+        // Insert in Orders table
+        Object.keys(itemsids).forEach((i) => { // Foreach on object keys because the keys are the ids of the items
           db.query(
             `SELECT
              a.id, a.price, a.cost
@@ -134,6 +137,7 @@ app.post("/order", async function (req, res) {
                   .send("Ocorreu um erro a inserir a info dos items do menu");
               }
               let menu_item_data = rows;
+              // Insert in order_items table
               db.query(
                 `INSERT INTO order_items(order_id, menu_item_id, quantity, price, cost)
                  VALUES(` +
@@ -141,7 +145,7 @@ app.post("/order", async function (req, res) {
                   `,` +
                   menu_item_data[0].id +
                   `, ` +
-                  itemsids[i] +
+                  itemsids[i]["quantity"] +
                   `, ` +
                   menu_item_data[0].price +
                   `, ` +
@@ -154,7 +158,49 @@ app.post("/order", async function (req, res) {
                       .status(500)
                       .send("Erro a associar os items ao pedido");
                   }
-                  // TODO: Side-Items (Ask if adding removing sides is needed, if not add only the default ones)
+                  if (itemsids[i]["sides"]) {
+                    let side_items = itemsids[i]["sides"];
+                    Object.keys(side_items).forEach((side) => {
+                      // Get price of the side item
+                      db.query(
+                        `SELECT price FROM menu_item_ingredients WHERE id=` +
+                          side,
+                        function (err4, result3) {
+                          if (err4) {
+                            console.log(err4);
+                            return res
+                              .status(500)
+                              .send(
+                                "Erro a associar os acompanhamentos ao pedido"
+                              );
+                          }
+                          // Insert in side items table
+                          db.query(
+                            `INSERT INTO order_items_sides(order_item_id, side_id, quantity, price)
+                          VALUES (` +
+                              result2.insertId +
+                              `,` +
+                              side +
+                              `,` +
+                              side_items[side] +
+                              `,` +
+                              result3[0]["price"] +
+                              `)`,
+                            function (err5, res4) {
+                              if (err5) {
+                                console.log(err5);
+                                return res
+                                  .status(500)
+                                  .send(
+                                    "Erro a associar os acompanhamentos ao pedido"
+                                  );
+                              }
+                            }
+                          );
+                        }
+                      );
+                    });
+                  }
                 }
               );
             }
