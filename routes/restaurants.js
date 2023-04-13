@@ -53,7 +53,11 @@ GROUP BY a.id, b.id",
 
 // Get all restaurants and their reviews
 app.get("/reviews", async function (req, res) {
-  const sql_where = restaurantFilters(req.body.filters);
+  let sql_where = restaurantFilters(req.body.filters);
+  let star_avg = null;
+  if (req.body.filters) {
+    star_avg = req.body.filters["star_avg"];
+  }
   db.query(
     `select a.id as restaurant_id, a.name as restaurant_name, a.logo_url, a.logo_name, round(sum(b.stars)/count(b.review)) as star_avg,
     concat(
@@ -68,7 +72,8 @@ app.get("/reviews", async function (req, res) {
     WHERE a.isPublic = 1 ` +
       sql_where +
       `
-    group by a.id`,
+    group by a.id` +
+      (star_avg ? ` HAVING star_avg=` + star_avg : ``),
     function (err, rows) {
       if (err) {
         console.log(err);
@@ -124,7 +129,8 @@ app.post("/order", async function (req, res) {
         }
         const itemsids = menu_items[item];
         // Insert in Orders table
-        Object.keys(itemsids).forEach((i) => { // Foreach on object keys because the keys are the ids of the items
+        Object.keys(itemsids).forEach((i) => {
+          // Foreach on object keys because the keys are the ids of the items
           db.query(
             `SELECT
              a.id, a.price, a.cost
@@ -219,6 +225,7 @@ app.post("/order", async function (req, res) {
  * @returns String
  */
 function restaurantFilters(filters) {
+  if (!filters) return "";
   filterMap = ["id", "restaurant_name", "logo_from_url", "logo_from_file"];
   sqlMap = {
     id: "a.id",
