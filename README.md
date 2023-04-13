@@ -50,10 +50,10 @@
     }
   ```
 
-  - id: id of the restaurant;
-  - restaurant_name: name of the restaurant. Uses wildcard search, for example if you send 'res' it would get all results with that substring for example: 'restaurant';
-  - logo_from_url: If the logo is from an url from the web;
-  - logo_from_file: If the logo is from a local file;
+  - ***id***: id of the restaurant;
+  - ***restaurant_name***: name of the restaurant. Uses wildcard search, for example if you send 'res' it would get all results with that substring for example: 'restaurant';
+  - ***logo_from_url***: If the logo is from an url from the web;
+  - ***logo_from_file***: If the logo is from a local file;
 
 ## 2. Get Reviews (http://localhost:3000/reviews)
 
@@ -98,11 +98,11 @@
     }
   ```
 
-  - id: Id of the restaurant;
-  - restaurant_name: Name of the restaurant. Uses wildcard search, for example if you send 'res' it would get all results with that substring for example: 'restaurant';
-  - logo_from_url: If the logo is from an url from the web;
-  - logo_from_file: If the logo is from a local file;
-  - star_avg: Gets the restaurants by their star average;
+  - ***id***: Id of the restaurant;
+  - ***restaurant_name***: Name of the restaurant. Uses wildcard search, for example if you send 'res' it would get all results with that substring for example: 'restaurant';
+  - ***logo_from_url***: If the logo is from an url from the web;
+  - ***logo_from_file***: If the logo is from a local file;
+  - ***star_avg***: Gets the restaurants by their star average;
 
 ## 3. Make an Order (http://localhost:3000/order)
 
@@ -124,9 +124,9 @@
     }
   ```
 
-  - user: ID of the user doing the order;
-  - deadline: When the user wants their order done;
-  - items: An object with the items.
+  - ***user***: ID of the user doing the order;
+  - ***deadline***: When the user wants their order done;
+  - ***items***: An object with the items.
     - ```
       {
           "1 (this is the id of the restaurant)": {
