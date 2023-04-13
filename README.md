@@ -127,7 +127,7 @@
   - ***user***: ID of the user doing the order;
   - ***deadline***: When the user wants their order done;
   - ***items***: An object with the items.
-    - ```
+    ```
       {
           "1 (this is the id of the restaurant)": {
               "6 (this is the id of the menu item)": {
