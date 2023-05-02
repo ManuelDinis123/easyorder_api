@@ -2,6 +2,11 @@ const express = require("express");
 const app = express();
 const restaurants = require('./routes/restaurants');
 
+const cors = require('cors');
+app.use(cors({
+    origin: '*'
+}));
+
 app.use(express.json());
 app.use("/", restaurants);
 
