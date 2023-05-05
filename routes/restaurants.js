@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
 var db = require("../database.js");
+const mid = require("../middleware/verify");
 
 // Get all public restaurants and menu items
-app.get("/", async function (req, res) {
+app.get("/", mid, async function (req, res) {
   const sql_where = restaurantFilters(req.body.filters);
   db.query("SET SESSION group_concat_max_len = 1000000;", function (err, rows) {
     db.query(
@@ -54,7 +55,7 @@ app.get("/", async function (req, res) {
 });
 
 // Get all restaurants and their reviews
-app.get("/reviews", async function (req, res) {
+app.get("/reviews", mid, async function (req, res) {
   let sql_where = restaurantFilters(req.body.filters);
   let star_avg = null;
   if (req.body.filters) {
@@ -97,7 +98,7 @@ app.get("/reviews", async function (req, res) {
 });
 
 // Place an order
-app.post("/order", async function (req, res) {
+app.post("/order", mid, async function (req, res) {
   const menu_items = req.body.items;
   var currentdate = new Date();
   var datetime =
