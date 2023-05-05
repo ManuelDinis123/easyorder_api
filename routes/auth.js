@@ -5,11 +5,7 @@ const jwtKey = "my_secret_key";
 
 app.post("/generate", async (req, res) => {
     try {
-        const email = req.body.email;
-
-        if (!(email)) {
-            res.status(400).send("Email is required");
-        }
+        const email = req.headers.email;
 
         // Create token
         const token = jwt.sign(
