@@ -4,7 +4,8 @@ var db = require("../database.js");
 const mid = require("../middleware/verify");
 
 // Get all public restaurants and menu items
-app.get("/", mid, async function (req, res) {
+app.post("/", mid, async function (req, res) {
+  console.log(req.body)
   const sql_where = restaurantFilters(req.body.filters);
   db.query("SET SESSION group_concat_max_len = 1000000;", function (err, rows) {
     db.query(

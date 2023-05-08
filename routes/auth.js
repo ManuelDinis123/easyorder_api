@@ -12,10 +12,7 @@ app.post("/generate", async (req, res) => {
             {
                 email,
             },
-            jwtKey,
-            {
-                expiresIn: "2h",
-            }
+            jwtKey
         );
 
         return res.status(200).json(token);

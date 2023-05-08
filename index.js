@@ -3,13 +3,13 @@ const app = express();
 const restaurants = require('./routes/restaurants');
 const auth = require('./routes/auth');
 
+app.set("view engine", "html");
 const bodyParser = require("body-parser");
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
-
 const cors = require('cors');
 app.use(cors({
     origin: '*'
